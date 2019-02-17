@@ -14,7 +14,7 @@ public class Song {
     public final String albumName;
     public final int artistId;
     public final String artistName;
-    final int year;
+    private final int year;
 
     public Song(final String title, final int trackNumber, final int year, final int duration,
                 final String path, final String albumName, final int artistId, final String artistName) {
