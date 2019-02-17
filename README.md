@@ -1,5 +1,5 @@
 # SampleMusicPlayer
-Simple music  player for begginers
+Simple music player
 ## Intro
 This project was due to stack overflow request and I have tried to simplify it as much as possible. Submit an issue for
 anything you want to be included. 
