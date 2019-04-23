@@ -17,6 +17,9 @@
         app:layout_constraintBottom_toTopOf="@+id/include"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+
+
     <include
         android:id="@+id/include"
         layout="@layout/controls"

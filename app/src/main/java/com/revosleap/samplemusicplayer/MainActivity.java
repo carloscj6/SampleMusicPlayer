@@ -15,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -28,16 +27,14 @@ import com.revosleap.samplemusicplayer.playback.MusicService;
 import com.revosleap.samplemusicplayer.playback.PlaybackInfoListener;
 import com.revosleap.samplemusicplayer.playback.PlayerAdapter;
 import com.revosleap.samplemusicplayer.utils.EqualizerUtils;
+import com.revosleap.samplemusicplayer.utils.RecyclerAdapter;
 import com.revosleap.samplemusicplayer.utils.SongProvider;
-import com.revosleap.simpleadapter.SimpleAdapter;
-import com.revosleap.simpleadapter.SimpleCallbacks;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, SimpleCallbacks {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        RecyclerAdapter.SongClicked {
 
     private RecyclerView recyclerView;
     private SeekBar seekBar;
@@ -50,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private PlaybackListener mPlaybackListener;
     private List<Song> mSelectedArtistSongs;
     private MusicNotificationManager mMusicNotificationManager;
-    private SimpleAdapter simpleAdapter;
+    private RecyclerAdapter recyclerAdapter;
     private final ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -126,14 +123,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         next.setOnClickListener(this);
         previous.setOnClickListener(this);
         //set adapter
-        simpleAdapter = new SimpleAdapter(R.layout.track_item, this);
-        recyclerView.setAdapter(simpleAdapter);
+        recyclerAdapter = new RecyclerAdapter(this);
+        recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         //get songs
         mSelectedArtistSongs = SongProvider.getAllDeviceSongs(this);
-        Log.w("SOngs", String.valueOf(mSelectedArtistSongs.size()));
-        simpleAdapter.addManyItems(((List) mSelectedArtistSongs));
+        recyclerAdapter.addSongs((ArrayList) mSelectedArtistSongs);
     }
 
     private void checkReadStoragePermissions() {
@@ -232,8 +228,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!seekBar.isEnabled()) {
             seekBar.setEnabled(true);
         }
-        mPlayerAdapter.setCurrentSong(song, songs);
-        mPlayerAdapter.initMediaPlayer();
+        try {
+            mPlayerAdapter.setCurrentSong(song, songs);
+            mPlayerAdapter.initMediaPlayer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void skipPrev() {
@@ -311,25 +311,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
-    @Override
-    public void bindView(@NotNull View view, @NotNull Object o, int i) {
-        TextView title = view.findViewById(R.id.textViewSongTitle);
-        TextView artist = view.findViewById(R.id.textViewArtistName);
-        Song song = ((Song) o);
-        title.setText(song.title);
-        artist.setText(song.artistName);
-    }
 
     @Override
-    public void onViewClicked(@NotNull View view, @NotNull Object o, int i) {
-        Song song = ((Song) o);
+    public void onSongClicked(Song song) {
         onSongSelected(song, mSelectedArtistSongs);
     }
 
-    @Override
-    public void onViewLongClicked(@Nullable View view, @NotNull Object o, int i) {
-
-    }
 
     class PlaybackListener extends PlaybackInfoListener {
 
