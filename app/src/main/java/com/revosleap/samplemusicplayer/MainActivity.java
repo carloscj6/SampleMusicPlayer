@@ -268,13 +268,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case (R.id.buttonPlayPause): {
                 resumeOrPause();
+                break;
 
             }
             case (R.id.buttonNext): {
                 skipNext();
+                break;
             }
             case (R.id.buttonPrevious): {
                 skipPrev();
+                break;
             }
         }
     }
