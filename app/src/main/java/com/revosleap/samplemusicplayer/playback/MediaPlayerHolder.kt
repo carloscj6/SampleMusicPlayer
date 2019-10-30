@@ -43,7 +43,7 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
                 // Lost audio focus, but will gain it back (shortly), so note whether
                 // playback should resume
                 mCurrentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
-                mPlayOnFocusGain = isMediaPlayer && mState == PlaybackInfoListener.State.PLAYING || mState == PlaybackInfoListener.State.RESUMED
+                mPlayOnFocusGain = isMediaPlayer() && mState == PlaybackInfoListener.State.PLAYING || mState == PlaybackInfoListener.State.RESUMED
             }
             AudioManager.AUDIOFOCUS_LOSS ->
                 // Lost audio focus, probably "permanently"
@@ -113,7 +113,7 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
         }
 
         if (sReplaySong) {
-            if (isMediaPlayer) {
+            if (isMediaPlayer()) {
                 resetSong()
             }
             sReplaySong = false
@@ -162,7 +162,7 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
     }
 
     private fun resumeMediaPlayer() {
-        if (!isPlaying) {
+        if (!isPlaying()) {
             mMediaPlayer!!.start()
             setStatus(PlaybackInfoListener.State.RESUMED)
             mMusicService!!.startForeground(MusicNotificationManager.NOTIFICATION_ID, mMusicNotificationManager!!.createNotification())
@@ -211,7 +211,7 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
     }
 
     private fun updateProgressCallbackTask() {
-        if (isMediaPlayer && mMediaPlayer!!.isPlaying) {
+        if (isMediaPlayer() && mMediaPlayer!!.isPlaying) {
             val currentPosition = mMediaPlayer!!.currentPosition
             if (mPlaybackInfoListener != null) {
                 mPlaybackInfoListener!!.onPositionChanged(currentPosition)
@@ -220,7 +220,7 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
     }
 
     override fun instantReset() {
-        if (isMediaPlayer) {
+        if (isMediaPlayer()) {
             if (mMediaPlayer!!.currentPosition < 5000) {
                 skip(false)
             } else {
@@ -275,7 +275,7 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
 
 
     override fun release() {
-        if (isMediaPlayer) {
+        if (isMediaPlayer()) {
             mMediaPlayer!!.release()
             mMediaPlayer = null
             giveUpAudioFocus()
@@ -284,12 +284,12 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
     }
 
     override fun isPlaying(): Boolean {
-        return isMediaPlayer && mMediaPlayer!!.isPlaying
+        return isMediaPlayer() && mMediaPlayer!!.isPlaying
     }
 
     override fun resumeOrPause() {
 
-        if (isPlaying) {
+        if (isPlaying()) {
             pauseMediaPlayer()
         } else {
             resumeMediaPlayer()
@@ -334,7 +334,7 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
     }
 
     override fun seekTo(position: Int) {
-        if (isMediaPlayer) {
+        if (isMediaPlayer()) {
             mMediaPlayer!!.seekTo(position)
         }
     }
@@ -388,7 +388,7 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
                     BluetoothDevice.ACTION_ACL_DISCONNECTED -> if (mSelectedSong != null) {
                         pauseMediaPlayer()
                     }
-                    BluetoothDevice.ACTION_ACL_CONNECTED -> if (mSelectedSong != null && !isPlaying) {
+                    BluetoothDevice.ACTION_ACL_CONNECTED -> if (mSelectedSong != null && !isPlaying()) {
                         resumeMediaPlayer()
                     }
                     Intent.ACTION_HEADSET_PLUG -> if (mSelectedSong != null) {
@@ -396,12 +396,12 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
                             //0 means disconnected
                             0 -> pauseMediaPlayer()
                             //1 means connected
-                            1 -> if (!isPlaying) {
+                            1 -> if (!isPlaying()) {
                                 resumeMediaPlayer()
                             }
                         }
                     }
-                    AudioManager.ACTION_AUDIO_BECOMING_NOISY -> if (isPlaying) {
+                    AudioManager.ACTION_AUDIO_BECOMING_NOISY -> if (isPlaying()) {
                         pauseMediaPlayer()
                     }
                 }

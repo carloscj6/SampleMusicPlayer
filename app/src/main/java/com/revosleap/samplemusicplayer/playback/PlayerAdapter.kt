@@ -3,23 +3,24 @@ package com.revosleap.samplemusicplayer.playback
 import android.media.MediaPlayer
 
 import com.revosleap.samplemusicplayer.models.Song
+import com.revosleap.samplemusicplayer.playback.PlaybackInfoListener.*
 
 interface PlayerAdapter {
 
-    val isMediaPlayer: Boolean
+    fun isMediaPlayer(): Boolean
 
-    val isPlaying: Boolean
+    fun isPlaying(): Boolean
 
-    val isReset: Boolean
+    fun isReset(): Boolean
 
-    val currentSong: Song
+    fun getCurrentSong(): Song?
 
-    @get:PlaybackInfoListener.State
-    val state: Int
+    @State
+    fun getState(): Int
 
-    val playerPosition: Int
+    fun getPlayerPosition(): Int
 
-    val mediaPlayer: MediaPlayer
+    fun getMediaPlayer(): MediaPlayer?
     fun initMediaPlayer()
 
     fun release()

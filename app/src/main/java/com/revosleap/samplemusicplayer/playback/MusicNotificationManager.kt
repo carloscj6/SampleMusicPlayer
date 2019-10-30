@@ -45,7 +45,7 @@ class MusicNotificationManager internal constructor(private val mMusicService: M
 
     fun createNotification(): Notification {
 
-        val song = mMusicService.mediaPlayerHolder.currentSong
+        val song = mMusicService.mediaPlayerHolder?.getCurrentSong()
 
         notificationBuilder = NotificationCompat.Builder(mMusicService, CHANNEL_ID)
 
@@ -66,7 +66,7 @@ class MusicNotificationManager internal constructor(private val mMusicService: M
         notificationBuilder!!
                 .setShowWhen(false)
                 .setSmallIcon(R.drawable.ic_play)
-                .setLargeIcon(Utils.songArt(song.path, mMusicService.baseContext))
+                .setLargeIcon(Utils.songArt(song.path!!, mMusicService.baseContext))
                 .setColor(context.resources.getColor(R.color.colorAccent))
                 .setContentTitle(songTitle)
                 .setContentText(artist)
@@ -90,7 +90,7 @@ class MusicNotificationManager internal constructor(private val mMusicService: M
             PREV_ACTION -> icon = R.drawable.ic_skip_previous
             PLAY_PAUSE_ACTION ->
 
-                icon = if (mMusicService.mediaPlayerHolder.state != PlaybackInfoListener.State.PAUSED)
+                icon = if (mMusicService.mediaPlayerHolder?.getState() != PlaybackInfoListener.State.PAUSED)
                     R.drawable.ic_pause
                 else
                     R.drawable.ic_play
@@ -129,7 +129,7 @@ class MusicNotificationManager internal constructor(private val mMusicService: M
 
     private fun updateMetaData(song: Song) {
         mediaSession!!.setMetadata(MediaMetadataCompat.Builder()
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, Utils.songArt(song.path, context))
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, Utils.songArt(song.path!!, context))
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.artistName)
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)

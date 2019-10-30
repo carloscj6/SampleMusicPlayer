@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
                 mPlaybackListener = PlaybackListener()
                 mPlayerAdapter!!.setPlaybackInfoListener(mPlaybackListener!!)
             }
-            if (mPlayerAdapter != null && mPlayerAdapter!!.isPlaying) {
+            if (mPlayerAdapter != null && mPlayerAdapter!!.isPlaying()) {
 
                 restorePlayerStatus()
             }
@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
     override fun onPause() {
         super.onPause()
         doUnbindService()
-        if (mPlayerAdapter != null && mPlayerAdapter!!.isMediaPlayer) {
+        if (mPlayerAdapter != null && mPlayerAdapter!!.isMediaPlayer()) {
             mPlayerAdapter!!.onPauseActivity()
         }
     }
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
     override fun onResume() {
         super.onResume()
         doBindService()
-        if (mPlayerAdapter != null && mPlayerAdapter!!.isPlaying) {
+        if (mPlayerAdapter != null && mPlayerAdapter!!.isPlaying()) {
 
             restorePlayerStatus()
         }
@@ -134,21 +134,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
     private fun updatePlayingInfo(restore: Boolean, startPlay: Boolean) {
 
         if (startPlay) {
-            mPlayerAdapter!!.mediaPlayer.start()
+            mPlayerAdapter!!.getMediaPlayer()?.start()
             Handler().postDelayed({
                 mMusicService!!.startForeground(MusicNotificationManager.NOTIFICATION_ID,
                         mMusicNotificationManager!!.createNotification())
             }, 250)
         }
 
-        val selectedSong = mPlayerAdapter!!.currentSong
+        val selectedSong = mPlayerAdapter!!.getCurrentSong()
 
-        songTitle!!.text = selectedSong.title
-        val duration = selectedSong.duration
-        seekBar!!.max = duration
+        songTitle!!.text = selectedSong?.title
+        val duration = selectedSong?.duration
+        seekBar!!.max = duration!!
 
         if (restore) {
-            seekBar!!.progress = mPlayerAdapter!!.playerPosition
+            seekBar!!.progress = mPlayerAdapter!!.getPlayerPosition()
             updatePlayingStatus()
 
 
@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
 
 
     private fun updatePlayingStatus() {
-        val drawable = if (mPlayerAdapter!!.state != PlaybackInfoListener.State.PAUSED)
+        val drawable = if (mPlayerAdapter!!.getState() != PlaybackInfoListener.State.PAUSED)
             R.drawable.ic_pause
         else
             R.drawable.ic_play
@@ -175,11 +175,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
     }
 
     private fun restorePlayerStatus() {
-        seekBar!!.isEnabled = mPlayerAdapter!!.isMediaPlayer
+        seekBar!!.isEnabled = mPlayerAdapter!!.isMediaPlayer()
 
         //if we are playing and the activity was restarted
         //update the controls panel
-        if (mPlayerAdapter != null && mPlayerAdapter!!.isMediaPlayer) {
+        if (mPlayerAdapter != null && mPlayerAdapter!!.isMediaPlayer()) {
 
             mPlayerAdapter!!.onResumeActivity()
             updatePlayingInfo(true, false)
@@ -240,7 +240,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
 
     private fun checkIsPlayer(): Boolean {
 
-        val isPlayer = mPlayerAdapter!!.isMediaPlayer
+        val isPlayer = mPlayerAdapter!!.isMediaPlayer()
         if (!isPlayer) {
             EqualizerUtils.notifyNoSessionId(this)
         }
@@ -308,8 +308,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
         override fun onStateChanged(@State state: Int) {
 
             updatePlayingStatus()
-            if (mPlayerAdapter!!.state != State.PAUSED
-                    && mPlayerAdapter!!.state != State.PAUSED) {
+            if (mPlayerAdapter!!.getState() != State.PAUSED
+                    && mPlayerAdapter!!.getState() != State.PAUSED) {
                 updatePlayingInfo(false, true)
             }
         }
