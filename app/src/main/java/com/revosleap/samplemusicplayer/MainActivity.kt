@@ -19,7 +19,6 @@ import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
-
 import com.revosleap.samplemusicplayer.models.Song
 import com.revosleap.samplemusicplayer.playback.MusicNotificationManager
 import com.revosleap.samplemusicplayer.playback.MusicService
@@ -30,8 +29,7 @@ import com.revosleap.samplemusicplayer.utils.RecyclerAdapter
 import com.revosleap.samplemusicplayer.utils.SongProvider
 import com.revosleap.samplemusicplayer.utils.Utils
 import kotlinx.android.synthetic.main.controls.*
-
-import java.util.ArrayList
+import java.util.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.SongClicked {
 
@@ -148,7 +146,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
         songTitle?.text = selectedSong?.title
         val duration = selectedSong?.duration
         seekBar?.max = duration!!
-        imageViewControl?.setImageBitmap(Utils.songArt(selectedSong.path!!,this@MainActivity))
+        imageViewControl?.setImageBitmap(Utils.songArt(selectedSong.path!!, this@MainActivity))
 
         if (restore) {
             seekBar!!.progress = mPlayerAdapter!!.getPlayerPosition()
@@ -167,7 +165,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
             }, 250)
         }
     }
-
 
     private fun updatePlayingStatus() {
         val drawable = if (mPlayerAdapter!!.getState() != PlaybackInfoListener.State.PAUSED)
@@ -210,7 +207,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
         }
     }
 
-    fun onSongSelected(song: Song, songs: List<Song>) {
+    private fun onSongSelected(song: Song, songs: List<Song>) {
         if (!seekBar!!.isEnabled) {
             seekBar!!.isEnabled = true
         }
@@ -223,19 +220,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
 
     }
 
-    fun skipPrev() {
+    private fun skipPrev() {
         if (checkIsPlayer()) {
             mPlayerAdapter!!.instantReset()
         }
     }
 
-    fun resumeOrPause() {
+    private fun resumeOrPause() {
         if (checkIsPlayer()) {
             mPlayerAdapter!!.resumeOrPause()
+        } else {
+            val songs = SongProvider.getAllDeviceSongs(this)
+            if (songs.isNotEmpty()) {
+                onSongSelected(songs[0], songs)
+            }
         }
     }
 
-    fun skipNext() {
+    private fun skipNext() {
         if (checkIsPlayer()) {
             mPlayerAdapter!!.skip(true)
         }
@@ -268,7 +270,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
     private fun initializeSeekBar() {
         seekBar!!.setOnSeekBarChangeListener(
                 object : SeekBar.OnSeekBarChangeListener {
-                    internal var userSelectedPosition = 0
+                    var userSelectedPosition = 0
 
                     override fun onStartTrackingTouch(seekBar: SeekBar) {
                         mUserIsSeeking = true
@@ -294,11 +296,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
                 })
     }
 
-
     override fun onSongClicked(song: Song) {
         onSongSelected(song, mSelectedArtistSongs!!)
     }
-
 
     internal inner class PlaybackListener : PlaybackInfoListener() {
 
