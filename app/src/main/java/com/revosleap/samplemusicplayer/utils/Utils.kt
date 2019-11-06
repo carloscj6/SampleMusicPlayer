@@ -30,7 +30,7 @@ object Utils {
 
     private fun getLargeIcon(context: Context): Bitmap {
 
-        val vectorDrawable = context.getDrawable(R.drawable.music_notification) as VectorDrawable
+        val vectorDrawable = context.getDrawable(R.drawable.headphones) as VectorDrawable
 
         val largeIconSize = context.resources.getDimensionPixelSize(R.dimen.notification_large_dim)
         val bitmap = Bitmap.createBitmap(largeIconSize, largeIconSize, Bitmap.Config.ARGB_8888)

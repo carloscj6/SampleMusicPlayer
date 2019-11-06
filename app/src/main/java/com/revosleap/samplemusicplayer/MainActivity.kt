@@ -28,6 +28,8 @@ import com.revosleap.samplemusicplayer.playback.PlayerAdapter
 import com.revosleap.samplemusicplayer.utils.EqualizerUtils
 import com.revosleap.samplemusicplayer.utils.RecyclerAdapter
 import com.revosleap.samplemusicplayer.utils.SongProvider
+import com.revosleap.samplemusicplayer.utils.Utils
+import kotlinx.android.synthetic.main.controls.*
 
 import java.util.ArrayList
 
@@ -138,14 +140,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
             Handler().postDelayed({
                 mMusicService!!.startForeground(MusicNotificationManager.NOTIFICATION_ID,
                         mMusicNotificationManager!!.createNotification())
-            }, 250)
+            }, 200)
         }
 
         val selectedSong = mPlayerAdapter!!.getCurrentSong()
 
-        songTitle!!.text = selectedSong?.title
+        songTitle?.text = selectedSong?.title
         val duration = selectedSong?.duration
-        seekBar!!.max = duration!!
+        seekBar?.max = duration!!
+        imageViewControl?.setImageBitmap(Utils.songArt(selectedSong.path!!,this@MainActivity))
 
         if (restore) {
             seekBar!!.progress = mPlayerAdapter!!.getPlayerPosition()
