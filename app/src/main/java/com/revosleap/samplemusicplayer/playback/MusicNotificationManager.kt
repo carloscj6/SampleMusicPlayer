@@ -10,6 +10,7 @@ import android.media.session.MediaSessionManager
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -65,9 +66,9 @@ class MusicNotificationManager internal constructor(private val mMusicService: M
 
         notificationBuilder!!
                 .setShowWhen(false)
-                .setSmallIcon(R.drawable.ic_play)
+                .setSmallIcon(R.drawable.ic_music_player)
                 .setLargeIcon(Utils.songArt(song.path!!, mMusicService.baseContext))
-                .setColor(context.resources.getColor(R.color.colorAccent))
+                .setColor(ContextCompat.getColor(context, R.color.colorAccent))
                 .setContentTitle(songTitle)
                 .setContentText(artist)
                 .setContentIntent(contentIntent)
