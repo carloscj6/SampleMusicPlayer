@@ -15,7 +15,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 
-import com.revosleap.samplemusicplayer.MainActivity
+import com.revosleap.samplemusicplayer.ui.activities.MainActivity
 import com.revosleap.samplemusicplayer.R
 import com.revosleap.samplemusicplayer.models.Song
 import com.revosleap.samplemusicplayer.utils.Utils

@@ -1,4 +1,4 @@
-package com.revosleap.samplemusicplayer
+package com.revosleap.samplemusicplayer.ui.activities
 
 import android.Manifest
 import android.content.ComponentName
@@ -19,19 +19,20 @@ import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import com.revosleap.samplemusicplayer.R
 import com.revosleap.samplemusicplayer.models.Song
 import com.revosleap.samplemusicplayer.playback.MusicNotificationManager
 import com.revosleap.samplemusicplayer.playback.MusicService
 import com.revosleap.samplemusicplayer.playback.PlaybackInfoListener
 import com.revosleap.samplemusicplayer.playback.PlayerAdapter
+import com.revosleap.samplemusicplayer.ui.blueprints.MainActivityBluePrint
 import com.revosleap.samplemusicplayer.utils.EqualizerUtils
 import com.revosleap.samplemusicplayer.utils.RecyclerAdapter
 import com.revosleap.samplemusicplayer.utils.SongProvider
 import com.revosleap.samplemusicplayer.utils.Utils
 import kotlinx.android.synthetic.main.controls.*
-import java.util.*
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.SongClicked {
+class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdapter.SongClicked {
 
     private var recyclerView: RecyclerView? = null
     private var seekBar: SeekBar? = null
@@ -44,9 +45,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
     private var mPlayerAdapter: PlayerAdapter? = null
     private var mUserIsSeeking = false
     private var mPlaybackListener: PlaybackListener? = null
-    private var mSelectedArtistSongs: List<Song>? = null
+    private var deviceSongs: MutableList<Song>? = null
     private var mMusicNotificationManager: MusicNotificationManager? = null
-    private var recyclerAdapter: RecyclerAdapter? = null
+
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
 
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
         doBindService()
         setViews()
         initializeSeekBar()
@@ -98,7 +99,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 1 && grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+        if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
             Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -116,13 +117,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
         next!!.setOnClickListener(this)
         previous!!.setOnClickListener(this)
         //set adapter
-        recyclerAdapter = RecyclerAdapter(this)
-        recyclerView!!.adapter = recyclerAdapter
-        recyclerView!!.layoutManager = LinearLayoutManager(this)
-        recyclerView!!.setHasFixedSize(true)
+
         //get songs
-        mSelectedArtistSongs = SongProvider.getAllDeviceSongs(this)
-        recyclerAdapter!!.addSongs((mSelectedArtistSongs as ArrayList<*>?)!!)
+        deviceSongs = SongProvider.getAllDeviceSongs(this)
+
     }
 
     private fun checkReadStoragePermissions() {
@@ -297,7 +295,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, RecyclerAdapter.
     }
 
     override fun onSongClicked(song: Song) {
-        onSongSelected(song, mSelectedArtistSongs!!)
+        onSongSelected(song, deviceSongs!!)
     }
 
     internal inner class PlaybackListener : PlaybackInfoListener() {

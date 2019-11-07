@@ -7,6 +7,8 @@ import android.media.MediaMetadataRetriever
 import com.revosleap.samplemusicplayer.R
 import java.io.ByteArrayInputStream
 import java.io.InputStream
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 object Utils {
 
@@ -25,7 +27,21 @@ object Utils {
     }
 
     private fun getLargeIcon(context: Context): Bitmap {
-        var image = BitmapFactory.decodeResource(context.resources, R.drawable.headphones)
-        return image
+        return BitmapFactory.decodeResource(context.resources, R.drawable.headphones)
+    }
+
+    fun formatDuration(duration: Int): String {
+        return String.format(Locale.getDefault(), "%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(duration.toLong()),
+                TimeUnit.MILLISECONDS.toSeconds(duration.toLong()) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration.toLong())))
+    }
+
+    fun formatTrack(trackNumber: Int): Int {
+        var formatted = trackNumber
+        if (trackNumber >= 1000) {
+            formatted = trackNumber % 1000
+        }
+        return formatted
     }
 }

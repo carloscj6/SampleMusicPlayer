@@ -27,13 +27,13 @@ object SongProvider {
 
     private val mAllDeviceSongs = ArrayList<Song>()
 
-    fun getAllDeviceSongs(context: Context): List<Song> {
+    fun getAllDeviceSongs(context: Context): MutableList<Song> {
         val cursor = makeSongCursor(context)
         return getSongs(cursor)
     }
 
 
-    internal fun getSongs(cursor: Cursor?): List<Song> {
+    private fun getSongs(cursor: Cursor?): MutableList<Song> {
         val songs = ArrayList<Song>()
         if (cursor != null && cursor.moveToFirst()) {
             do {

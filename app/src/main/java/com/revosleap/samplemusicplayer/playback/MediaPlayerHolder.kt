@@ -10,7 +10,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.PowerManager
 
-import com.revosleap.samplemusicplayer.MainActivity
+import com.revosleap.samplemusicplayer.ui.activities.MainActivity
 import com.revosleap.samplemusicplayer.models.Song
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService

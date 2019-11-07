@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Sample Music Player</string>
+    <string name="app_name">Music Player</string>
+    <string name="delete">Delete</string>
 </resources>
