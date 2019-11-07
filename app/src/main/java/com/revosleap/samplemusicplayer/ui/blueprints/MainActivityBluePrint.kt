@@ -58,6 +58,7 @@ abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback,
                 val songs = songAdapter?.getSelectedSongs()
                 Toast.makeText(this, "Deleted ${songs?.size} Songs", Toast.LENGTH_SHORT).show()
                 mode?.finish()
+                songAdapter?.removeSelection()
                 return true
             }
 
@@ -66,6 +67,7 @@ abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback,
     }
 
     override fun onDestroyActionMode(mode: ActionMode?) {
+        songAdapter?.removeSelection()
         actionMode = null
     }
 

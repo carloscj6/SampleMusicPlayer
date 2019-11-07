@@ -13,7 +13,7 @@
 
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <solid android:color="#92D3D3D6" />
+            <solid android:color="@android:color/transparent" />
 
         </shape>
     </item>

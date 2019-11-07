@@ -18,19 +18,38 @@ class RecyclerAdapter :
     private var selectedSongs = mutableListOf<Song>()
     private var selectionModeActive = false
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.track_item, viewGroup, false))
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        val song = songsList[i]
-        viewHolder.bind(song, i)
-        setOnclickListeners(viewHolder.mainItem, i)
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        val song = songsList[position]
+        viewHolder.bind(song, position)
+        viewHolder.mainItem.isSelected = selectedSongs.contains(song)
+        viewHolder.mainItem.setOnLongClickListener {
+            onLongClick?.onSongLongClicked(position)
+            if (!selectionModeActive) {
+                selectionModeActive = true
+            }
+            false
+        }
+        viewHolder.mainItem.setOnClickListener {
+            if (!selectionModeActive) {
+                onSongClicked?.onSongClicked(song)
+            } else {
+                if (selectedSongs.contains(song)) {
+                    selectedSongs.remove(song)
+                    songsSelected?.onSelectSongs(getSelectedSongs())
 
+                } else {
+                    selectedSongs.add(song)
+
+                    songsSelected?.onSelectSongs(getSelectedSongs())
+
+                }
+                notifyItemChanged(position)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -46,6 +65,7 @@ class RecyclerAdapter :
     fun removeSelection() {
         selectionModeActive = false
         selectedSongs.clear()
+        notifyDataSetChanged()
     }
 
     fun getSelectedSongs(): MutableList<Song> {
@@ -75,38 +95,6 @@ class RecyclerAdapter :
     interface OnLongClick {
         fun onSongLongClicked(position: Int)
     }
-
-    private fun setOnclickListeners(itemView: View, position: Int) {
-        itemView.setOnClickListener {
-            val song = songsList[position]
-            if (!selectionModeActive) {
-                onSongClicked?.onSongClicked(song)
-            } else {
-                if (selectedSongs.contains(song)) {
-                    selectedSongs.remove(song)
-                    songsSelected?.onSelectSongs(getSelectedSongs())
-                    itemView.isSelected = false
-
-                } else {
-                    selectedSongs.add(song)
-                    itemView.isSelected = true
-                    songsSelected?.onSelectSongs(getSelectedSongs())
-
-                }
-                //  notifyDataSetChanged()
-            }
-
-        }
-
-        itemView.setOnLongClickListener {
-            onLongClick?.onSongLongClicked(position)
-            if (!selectionModeActive) {
-                selectionModeActive = true
-            }
-            false
-        }
-    }
-
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.textViewSongTitle)
