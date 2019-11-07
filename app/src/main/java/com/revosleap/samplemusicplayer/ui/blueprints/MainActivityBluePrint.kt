@@ -3,6 +3,7 @@ package com.revosleap.samplemusicplayer.ui.blueprints
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
@@ -11,10 +12,13 @@ import com.revosleap.samplemusicplayer.R
 import com.revosleap.samplemusicplayer.models.Song
 import com.revosleap.samplemusicplayer.utils.RecyclerAdapter
 import com.revosleap.samplemusicplayer.utils.SongProvider
+import com.revosleap.samplemusicplayer.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
+import java.net.URI
 
 abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback, RecyclerAdapter.OnLongClick,
-        RecyclerAdapter.SongsSelected,RecyclerAdapter.SongClicked {
+        RecyclerAdapter.SongsSelected, RecyclerAdapter.SongClicked {
     private var actionMode: ActionMode? = null
     private var songAdapter: RecyclerAdapter? = null
     private var deviceMusic = mutableListOf<Song>()
@@ -37,7 +41,7 @@ abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback,
             actionMode?.finish()
             songAdapter?.removeSelection()
         } else {
-            val title = "Selected Songs ${selectedSongs.size}"
+            val title = "Delete ${selectedSongs.size} Songs"
             actionMode?.title = title
         }
     }
@@ -56,6 +60,11 @@ abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback,
         when (item?.itemId) {
             R.id.action_delete -> {
                 val songs = songAdapter?.getSelectedSongs()
+                songs?.forEach {
+                    val file = File(it.path)
+                    Utils.delete(this@MainActivityBluePrint,file)
+                    songAdapter?.updateRemoved(it)
+                }
                 Toast.makeText(this, "Deleted ${songs?.size} Songs", Toast.LENGTH_SHORT).show()
                 mode?.finish()
                 songAdapter?.removeSelection()

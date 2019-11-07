@@ -258,6 +258,7 @@ class MediaPlayerHolder(private val mMusicService: MusicService?) :
             mMediaPlayer!!.prepare()
         } catch (e: Exception) {
             e.printStackTrace()
+            skip(true)
         }
 
     }

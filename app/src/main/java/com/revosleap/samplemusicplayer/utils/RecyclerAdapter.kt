@@ -72,6 +72,11 @@ class RecyclerAdapter :
         return selectedSongs
     }
 
+    fun updateRemoved(song: Song){
+        songsList.remove(song)
+        notifyDataSetChanged()
+    }
+
     fun setOnSongClicked(songClick: SongClicked) {
         this.onSongClicked = songClick
     }
