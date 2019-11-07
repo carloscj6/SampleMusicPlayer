@@ -11,9 +11,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageButton
 import android.widget.SeekBar
@@ -26,7 +23,6 @@ import com.revosleap.samplemusicplayer.playback.MusicService
 import com.revosleap.samplemusicplayer.playback.PlaybackInfoListener
 import com.revosleap.samplemusicplayer.playback.PlayerAdapter
 import com.revosleap.samplemusicplayer.ui.blueprints.MainActivityBluePrint
-import com.revosleap.samplemusicplayer.utils.EqualizerUtils
 import com.revosleap.samplemusicplayer.utils.RecyclerAdapter
 import com.revosleap.samplemusicplayer.utils.SongProvider
 import com.revosleap.samplemusicplayer.utils.Utils
@@ -34,7 +30,6 @@ import kotlinx.android.synthetic.main.controls.*
 
 class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdapter.SongClicked {
 
-    private var recyclerView: RecyclerView? = null
     private var seekBar: SeekBar? = null
     private var playPause: ImageButton? = null
     private var next: ImageButton? = null
@@ -78,6 +73,7 @@ class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdap
         setViews()
         initializeSeekBar()
 
+
     }
 
     override fun onPause() {
@@ -110,22 +106,19 @@ class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdap
         next = findViewById(R.id.buttonNext)
         previous = findViewById(R.id.buttonPrevious)
         seekBar = findViewById(R.id.seekBar)
-        recyclerView = findViewById(R.id.recyclerView)
         songTitle = findViewById(R.id.songTitle)
-        //To listen to clicks
         playPause!!.setOnClickListener(this)
         next!!.setOnClickListener(this)
         previous!!.setOnClickListener(this)
-        //set adapter
-
-        //get songs
         deviceSongs = SongProvider.getAllDeviceSongs(this)
+
 
     }
 
     private fun checkReadStoragePermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
         }
     }
 
@@ -160,7 +153,7 @@ class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdap
                                     mMusicService!!.musicNotificationManager!!.notificationBuilder!!.build())
                     mMusicService!!.isRestoredFromPause = false
                 }
-            }, 250)
+            }, 200)
         }
     }
 
@@ -231,6 +224,7 @@ class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdap
             val songs = SongProvider.getAllDeviceSongs(this)
             if (songs.isNotEmpty()) {
                 onSongSelected(songs[0], songs)
+
             }
         }
     }
@@ -242,12 +236,7 @@ class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdap
     }
 
     private fun checkIsPlayer(): Boolean {
-
-        val isPlayer = mPlayerAdapter!!.isMediaPlayer()
-        if (!isPlayer) {
-            EqualizerUtils.notifyNoSessionId(this)
-        }
-        return isPlayer
+        return mPlayerAdapter!!.isMediaPlayer()
     }
 
     override fun onClick(v: View) {
