@@ -9,13 +9,15 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.revosleap.samplemusicplayer.R
 import com.revosleap.samplemusicplayer.models.Song
 import com.revosleap.samplemusicplayer.playback.MusicNotificationManager
@@ -23,9 +25,11 @@ import com.revosleap.samplemusicplayer.playback.MusicService
 import com.revosleap.samplemusicplayer.playback.PlaybackInfoListener
 import com.revosleap.samplemusicplayer.playback.PlayerAdapter
 import com.revosleap.samplemusicplayer.ui.blueprints.MainActivityBluePrint
+import com.revosleap.samplemusicplayer.utils.EqualizerUtils
 import com.revosleap.samplemusicplayer.utils.RecyclerAdapter
 import com.revosleap.samplemusicplayer.utils.SongProvider
 import com.revosleap.samplemusicplayer.utils.Utils
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.controls.*
 
 class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdapter.SongClicked {
@@ -101,6 +105,20 @@ class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdap
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_activity_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_equalizer -> {
+                EqualizerUtils.openEqualizer(this, mPlayerAdapter?.getMediaPlayer())
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun setViews() {
         playPause = findViewById(R.id.buttonPlayPause)
         next = findViewById(R.id.buttonNext)
@@ -111,8 +129,7 @@ class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdap
         next!!.setOnClickListener(this)
         previous!!.setOnClickListener(this)
         deviceSongs = SongProvider.getAllDeviceSongs(this)
-
-
+        setSupportActionBar(toolbar)
     }
 
     private fun checkReadStoragePermissions() {

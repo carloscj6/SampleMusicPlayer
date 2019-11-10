@@ -33,8 +33,8 @@ object EqualizerUtils {
         context.sendBroadcast(audioEffectsIntent)
     }
 
-    internal fun openEqualizer(activity: Activity, mediaPlayer: MediaPlayer) {
-        val sessionId = mediaPlayer.audioSessionId
+    internal fun openEqualizer(activity: Activity, mediaPlayer: MediaPlayer?) {
+        val sessionId = mediaPlayer?.audioSessionId
 
         if (sessionId == AudioEffect.ERROR_BAD_VALUE) {
             notifyNoSessionId(activity)

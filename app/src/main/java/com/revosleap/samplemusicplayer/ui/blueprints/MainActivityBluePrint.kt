@@ -13,6 +13,7 @@ import com.revosleap.samplemusicplayer.utils.RecyclerAdapter
 import com.revosleap.samplemusicplayer.utils.SongProvider
 import com.revosleap.samplemusicplayer.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
 
 abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback, RecyclerAdapter.OnLongClick,
@@ -85,7 +86,7 @@ abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback,
         songAdapter?.setOnSongClicked(this)
         recyclerView?.apply {
             adapter = songAdapter
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivityBluePrint)
+            layoutManager = LinearLayoutManager(this@MainActivityBluePrint)
             hasFixedSize()
         }
         songAdapter?.addSongs(deviceMusic)
