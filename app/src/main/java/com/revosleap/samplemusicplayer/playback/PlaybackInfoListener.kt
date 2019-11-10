@@ -1,6 +1,6 @@
 package com.revosleap.samplemusicplayer.playback
 
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 
 abstract class PlaybackInfoListener {
     open fun onPositionChanged(position: Int) {}

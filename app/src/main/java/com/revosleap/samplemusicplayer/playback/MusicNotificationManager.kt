@@ -8,9 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.media.session.MediaSessionManager
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -77,7 +77,7 @@ class MusicNotificationManager internal constructor(private val mMusicService: M
                 .addAction(notificationAction(NEXT_ACTION))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
-        notificationBuilder!!.setStyle(android.support.v4.media.app.NotificationCompat.MediaStyle()
+        notificationBuilder!!.setStyle(androidx.media.app.NotificationCompat.MediaStyle()
                 .setMediaSession(mediaSession!!.sessionToken)
                 .setShowActionsInCompactView(0, 1, 2))
         return notificationBuilder!!.build()

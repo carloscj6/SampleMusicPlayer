@@ -1,7 +1,7 @@
 package com.revosleap.samplemusicplayer.utils
 
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.revosleap.samplemusicplayer.R
 import com.revosleap.samplemusicplayer.models.Song
 
 class RecyclerAdapter :
-        RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+        androidx.recyclerview.widget.RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     private var onLongClick: OnLongClick? = null
     private var onSongClicked: SongClicked? = null
     private var songsSelected: SongsSelected? = null
@@ -101,7 +101,7 @@ class RecyclerAdapter :
         fun onSongLongClicked(position: Int)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.textViewSongTitle)
         private val artist: TextView = itemView.findViewById(R.id.textViewArtistName)
         val mainItem: ConstraintLayout = itemView.findViewById(R.id.mainConstraint)

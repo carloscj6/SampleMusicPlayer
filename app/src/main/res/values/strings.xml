@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Music Player</string>
     <string name="delete">Delete</string>
+    <string name="equalizer">Equalizer</string>
 </resources>

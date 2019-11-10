@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.os.Handler
 import android.provider.MediaStore
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.revosleap.samplemusicplayer.R
 import java.io.ByteArrayInputStream

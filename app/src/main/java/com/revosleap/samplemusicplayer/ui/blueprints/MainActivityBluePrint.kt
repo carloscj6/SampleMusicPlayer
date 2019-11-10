@@ -1,8 +1,8 @@
 package com.revosleap.samplemusicplayer.ui.blueprints
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
@@ -85,7 +85,7 @@ abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback,
         songAdapter?.setOnSongClicked(this)
         recyclerView?.apply {
             adapter = songAdapter
-            layoutManager = LinearLayoutManager(this@MainActivityBluePrint)
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivityBluePrint)
             hasFixedSize()
         }
         songAdapter?.addSongs(deviceMusic)
