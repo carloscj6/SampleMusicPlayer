@@ -102,7 +102,7 @@ class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdap
         if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
             Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
             finish()
-        }
+        }else getMusic()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -136,7 +136,7 @@ class MainActivity : MainActivityBluePrint(), View.OnClickListener, RecyclerAdap
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-        }
+        }else getMusic()
     }
 
     private fun updatePlayingInfo(restore: Boolean, startPlay: Boolean) {

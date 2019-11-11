@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.revosleap.samplemusicplayer.R
 import com.revosleap.samplemusicplayer.models.Song
@@ -48,6 +49,7 @@ abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback,
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
         val inflater = mode?.menuInflater
         inflater?.inflate(R.menu.action_mode_menu, menu!!)
+        toolbar.visibility= View.GONE
         return true
     }
 
@@ -76,11 +78,12 @@ abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback,
 
     override fun onDestroyActionMode(mode: ActionMode?) {
         songAdapter?.removeSelection()
+        toolbar.visibility= View.VISIBLE
         actionMode = null
     }
 
     private fun setViews() {
-        deviceMusic.addAll(SongProvider.getAllDeviceSongs(this))
+
         songAdapter?.setOnLongClick(this)
         songAdapter?.setSongsSelected(this)
         songAdapter?.setOnSongClicked(this)
@@ -89,7 +92,11 @@ abstract class MainActivityBluePrint : AppCompatActivity(), ActionMode.Callback,
             layoutManager = LinearLayoutManager(this@MainActivityBluePrint)
             hasFixedSize()
         }
-        songAdapter?.addSongs(deviceMusic)
+
     }
 
+    fun getMusic(){
+        deviceMusic.addAll(SongProvider.getAllDeviceSongs(this))
+        songAdapter?.addSongs(deviceMusic)
+    }
 }
