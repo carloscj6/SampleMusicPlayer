@@ -1,7 +1,7 @@
 # SampleMusicPlayer
 Simple music player
 ## Intro
-This project was due to stack overflow request.
+This project was due to a stack overflow request.
 
 Then I decided, why make a simple audio player that can actually do stuff?
 
@@ -19,4 +19,4 @@ LICENSE
     MIT License
 
     Copyright (c) 2019 Carlos Anyona
- Read full license [here](/License)
+ Read full license [here](/LICENSE)
