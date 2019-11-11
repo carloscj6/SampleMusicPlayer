@@ -19,4 +19,4 @@ LICENSE
     MIT License
 
     Copyright (c) 2019 Carlos Anyona
- Read full license [here](/LICENSE)
+ Get full license [here](/LICENSE)
